@@ -6,7 +6,7 @@ tasks:
 
 ports:
     - port: 5000
-      onOpen: open-preview
+      #onOpen: open-preview
     - port: 35729
       onOpen: ignore
 
