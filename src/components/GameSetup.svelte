@@ -1,5 +1,5 @@
 <script lang="ts">
-
+    console.log('hello');
 </script>
 
-<p>Welcome</p>
+<h1>Who's Playing?</h1>
