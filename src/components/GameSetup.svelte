@@ -1,5 +1,5 @@
 <script lang="ts">
-    console.log('hello');
+    console.log('hello from GameSetup');
 </script>
 
 <h1>Who's Playing?</h1>
@@ -14,4 +14,10 @@
     <input type="text" id="name-2" value="">
 </div>
 
-<button type="button">Start Game</button>
+<div>
+    <button type="button">Add Player</button>
+</div>
+
+<div>
+    <button type="button">Start Game</button>
+</div>
