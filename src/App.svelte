@@ -9,6 +9,42 @@
 	window.onpopstate = function() {
         page = document.location.hash;
     };
+
+	// use object w/ IDs in case we want to be able to remove players mid game
+	// kind of just seems like a good idea possibly for other reasons
+	let players = [
+		{
+			id: 0,
+			name: 'Abby'
+		},
+		{
+			id: 1,
+			name: 'Jason'
+		}
+	];
+
+	let scores = [
+		[
+			{
+				id: 0,
+				points: 0
+			},
+			{
+				id: 1,
+				points: 0
+			},
+		],
+		[
+			{
+				id: 0,
+				points: 10
+			},
+			{
+				id: 1,
+				points: 5
+			},
+		],
+	];
 </script>
 
 <main>
@@ -25,7 +61,7 @@
 	{:else if page === "#current-round"}
 		<CurrentRound />
 	{:else if page === "#history"}
-		<History />
+		<History players={players} scores={scores} />
 	{:else if page === "#edit-round"}
 		<EditRound />
 	{:else}

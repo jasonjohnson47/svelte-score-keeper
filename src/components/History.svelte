@@ -1,8 +1,29 @@
+<script lang="ts">
+    interface Player {
+        id: number;
+        name: string;
+    }
+    interface Score {
+        id: number;
+        points: number;
+    }
+    type Round = Score[];
+    type ScoreHistory = Round[];
+
+    export let players: Player[];
+    export let scores: ScoreHistory;
+
+    function getPointsById(round: Round, playerId: number) {
+        return round.filter(({id}) => id === playerId)[0].points;
+    }
+</script>
+
 <h1>Scoring History</h1>
 
+{#each scores as round, index}
 <section>
-    <h2>Round 1</h2>
-    <button type="button">Edit Round 1</button>
+    <h2>Round {index + 1}</h2>
+    <button type="button">Edit Round {index + 1}</button>
     <table>
         <thead>
             <tr>
@@ -11,40 +32,16 @@
             </tr>
         </thead>
         <tbody>
+            {#each players as player}
             <tr>
-                <th scope="row">Abby</th>
-                <td>10</td>
+                <th scope="row">{player.name}</th>
+                <td>{getPointsById(round, player.id)}</td>
             </tr>
-            <tr>
-                <th scope="row">Jason</th>
-                <td>5</td>
-            </tr>
+            {/each}
         </tbody>
     </table>
 </section>
-
-<section>
-    <h2>Round 2</h2>
-    <button type="button">Edit Round 2</button>
-    <table>
-        <thead>
-            <tr>
-                <th scope="col">Player</th>
-                <th scope="col">Score</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row">Abby</th>
-                <td>20</td>
-            </tr>
-            <tr>
-                <th scope="row">Jason</th>
-                <td>15</td>
-            </tr>
-        </tbody>
-    </table>
-</section>
+{/each}
 
 <div>
     <a href="#current-round">Back to Current Round</a>
