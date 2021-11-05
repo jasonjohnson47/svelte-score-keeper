@@ -1,29 +1,22 @@
 <script lang="ts">
-    interface Player {
-        id: number;
-        name: string;
-    }
-    interface Score {
-        id: number;
-        points: number;
-    }
-    type Round = Score[];
-    type ScoreHistory = Round[];
+    import { players } from '../stores';
+	import { scores } from '../stores';
+    import { roundToEdit } from '../stores';
+    import { getPointsById } from '../utils';
 
-    export let players: Player[];
-    export let scores: ScoreHistory;
-
-    function getPointsById(round: Round, playerId: number) {
-        return round.filter(({id}) => id === playerId)[0].points;
+    function editRound(index: number) {
+        roundToEdit.set(index);
+        document.location.hash = 'edit-round';
     }
+
 </script>
 
 <h1>Scoring History</h1>
 
-{#each scores as round, index}
+{#each $scores as round, index}
 <section>
     <h2>Round {index + 1}</h2>
-    <button type="button">Edit Round {index + 1}</button>
+    <button type="button" on:click="{() => { editRound(index) }}">Edit Round {index + 1}</button>
     <table>
         <thead>
             <tr>
@@ -32,7 +25,7 @@
             </tr>
         </thead>
         <tbody>
-            {#each players as player}
+            {#each $players as player}
             <tr>
                 <th scope="row">{player.name}</th>
                 <td>{getPointsById(round, player.id)}</td>

@@ -50,7 +50,10 @@ export default {
                 dev: !production,
             },
         }),
-        typescript({ sourceMap: !production }),
+        typescript({
+            sourceMap: !production,
+            rootDir: './src'
+        }),
         // we'll extract any component CSS out into
         // a separate file - better for performance
         css({ output: "bundle.css" }),

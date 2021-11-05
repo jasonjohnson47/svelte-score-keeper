@@ -1,44 +1,30 @@
-<h1>Edit Round 1</h1>
+<script lang="ts">
+    import { players } from '../stores';
+	import { scores } from '../stores';
+    import { roundToEdit } from '../stores';
+    import { getPointsById } from '../utils';
+    import type { Round } from '../types';
+
+    const currentRoundScores: Round = $scores[$roundToEdit];
+</script>
+
+<h1>Edit Round {$roundToEdit + 1}</h1>
 
 <form action="">
     <ul>
-        <li>
-            <label for="score-0">Abby</label>
-            <input type="text" id="score-0" name="score-0" value="10" aria-describedby="score-0-description">
-            <span id="score-0-description" class="sr-only">Abby's score in round 1</span>
-        </li>
-        <li>
-            <label for="score-1">Jason</label>
-            <input type="text" id="score-1" name="score-1" value="5" aria-describedby="score-1-description">
-            <span id="score-1-description" class="sr-only">Jason's score in round 1</span>
-        </li>
+        {#each $players as player}
+            <li>
+                <label for="score-{player.id}">{player.name}</label>
+                <input type="text" id="score-{player.id}" name="score-{player.id}" value="{getPointsById(currentRoundScores, player.id)}" aria-describedby="score-{player.id}-description">
+                <span id="score-{player.id}-description" class="sr-only">{player.name}'s score in round {$roundToEdit + 1}</span>
+            </li>
+        {/each}
     </ul>
-    <!--<table>
-        <thead>
-            <tr>
-                <th scope="col">Player</th>
-                <th scope="col">Score</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row"><label for="score-0">Abby</label></th>
-                <td>
-                    <input type="text" id="score-0" name="score-0" value="10" aria-describedby="score-0-description">
-                    <span id="score-0-description" class="sr-only">Abby's Score</span>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row"><label for="score-1">Jason</label></th>
-                <td>
-                    <input type="text" id="score-1" name="score-1" value="5" aria-describedby="score-1-description">
-                    <span id="score-1-description" class="sr-only">Jason's Score</span>
-                </td>
-            </tr>
-        </tbody>
-    </table>-->
     <div>
-        <button type="submit">Cancel</button>
+        <button
+            type="submit"
+            on:click="{() => { document.location.hash = 'history'; }}"
+        >Cancel</button>
         <button type="submit">Update Round</button>
     </div>
 </form>
