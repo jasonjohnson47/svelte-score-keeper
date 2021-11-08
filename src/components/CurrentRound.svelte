@@ -6,6 +6,8 @@
 
     const currentRoundNumber = $scores.length;
     const currentRoundScores: Round = $scores[currentRoundNumber - 1];
+
+    console.log($scores);
 </script>
 
 <h1>Round { currentRoundNumber }</h1>
