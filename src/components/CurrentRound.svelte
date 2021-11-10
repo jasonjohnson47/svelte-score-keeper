@@ -1,13 +1,39 @@
 <script lang="ts">
     import { players } from '../stores';
 	import { scores } from '../stores';
+    import { roundToEdit } from '../stores';
     import { getPointsById } from '../utils';
     import type { Round } from '../types';
 
     const currentRoundNumber = $scores.length;
     const currentRoundScores: Round = $scores[currentRoundNumber - 1];
 
-    console.log($scores);
+    /*const thisRoundScores: Round = [
+        {
+            id: 0,
+            points: -10
+        },
+        {
+            id: 1,
+            points: 20
+        }
+    ];*/
+
+    const thisRoundScores: Round = $players.map((player) => ({
+            id: player.id,
+            points: 0
+    }));
+
+    /*function getPlayerRoundById(playerId: number) {
+        // broken
+        // get object for the score for the player with the same id
+        return thisRoundScores.filter(({id}) => id === playerId);
+    }*/
+
+    function submitRound() {
+        scores.set([...$scores, thisRoundScores]);
+        roundToEdit.set(currentRoundNumber);
+    }
 </script>
 
 <h1>Round { currentRoundNumber }</h1>
@@ -40,7 +66,13 @@
                     </fieldset>
                     <div>
                         <label for="points-{player.id}">Points</label>
-                        <input type="text" id="points-{player.id}" name="points-{player.id}" value="">
+                        <!-- bind:value={getPlayerRoundById(player.id).points} -->
+                        <input
+                            type="text"
+                            id="points-{player.id}"
+                            name="points-{player.id}"
+                            bind:value={thisRoundScores[player.id].points}
+                        >
                     </div>
                 </div>
             </li>
@@ -48,6 +80,6 @@
         </ul>
     </section>
     <div>
-        <button type="submit">Submit Round</button>
+        <button type="submit" on:click="{submitRound}">Submit Round</button>
     </div>
 </form>

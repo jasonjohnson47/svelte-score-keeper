@@ -4,15 +4,15 @@
 
     function addPlayer() {
 
-        /* If we want to use 'update', would need to modify localStore like we have for 'set' such that it saves to localStorage */
+        /* If we want to use 'update', would need to modify localStore like we have for 'set' such that it saves to localStorage, or we could create a custom store methods like addPlayer */
 
         /*players.update((currPlayers) => {
             return [...currPlayers, { 
                 id: currPlayers.length,
                 name: ''
             }];
-        });*/
-        /*scores.update((currScores) => {
+        });
+        scores.update((currScores) => {
             let newScores = currScores.map((scoreRound) => {
                 return [...scoreRound, { 
                     id: scoreRound.length,
