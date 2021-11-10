@@ -2,33 +2,31 @@
     import { players } from '../stores';
 	import { scores } from '../stores';
     import { roundToEdit } from '../stores';
-    import { getPointsById } from '../utils';
+    import { getTotalScoreById } from '../utils';
     import type { Round } from '../types';
 
     const currentRoundNumber = $scores.length;
-    const currentRoundScores: Round = $scores[currentRoundNumber - 1];
-
-    /*const thisRoundScores: Round = [
-        {
-            id: 0,
-            points: -10
-        },
-        {
-            id: 1,
-            points: 20
-        }
-    ];*/
 
     const thisRoundScores: Round = $players.map((player) => ({
             id: player.id,
             points: 0
     }));
 
-    /*function getPlayerRoundById(playerId: number) {
-        // broken
+    /* why does this not work?
+
+    We should get this to work so we are finding the points by the 'id' property in the score object rather than index position of the score object within the thisRoundScores array
+
+    in html template below:
+    bind:value={getPlayerRoundById(thisRoundScores, player.id).points}
+
+    console.log(thisRoundScores);
+    function getPlayerRoundById(round: Round, playerId: number) {
         // get object for the score for the player with the same id
-        return thisRoundScores.filter(({id}) => id === playerId);
-    }*/
+        console.log(round.find((score) => score.id === playerId));
+        return round.find((score) => score.id === playerId);
+    }
+    getPlayerRoundById(thisRoundScores, 1);
+    */
 
     function submitRound() {
         scores.set([...$scores, thisRoundScores]);
@@ -50,7 +48,7 @@
             <li>
                 <dl>
                     <dt>{player.name} <span class="sr-only">score</span></dt>
-                    <dd>{getPointsById(currentRoundScores, player.id)}</dd>
+                    <dd>{getTotalScoreById($scores, player.id)}</dd>
                 </dl>
                 <div role="group" aria-label="points this round">
                     <fieldset>
@@ -66,9 +64,8 @@
                     </fieldset>
                     <div>
                         <label for="points-{player.id}">Points</label>
-                        <!-- bind:value={getPlayerRoundById(player.id).points} -->
                         <input
-                            type="text"
+                            type="number"
                             id="points-{player.id}"
                             name="points-{player.id}"
                             bind:value={thisRoundScores[player.id].points}
