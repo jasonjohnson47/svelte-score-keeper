@@ -16,3 +16,21 @@ export function getTotalScoreById(scores: ScoreHistory, playerId: number) {
     0);
     return totalScore;
 }
+
+export function getAccumulativeScoreById(
+    scores: ScoreHistory,
+    playerId: number,
+    roundNumber: number
+) {
+    let scoresUpToRound = scores.slice(0, roundNumber + 1);
+
+    const totalScore: number = scoresUpToRound.reduce(function (
+        acc: number,
+        curr: Round
+    ) {
+        const playerScore = curr.find((score) => score.id === playerId);
+        return (acc += playerScore.points);
+    },
+    0);
+    return totalScore;
+}

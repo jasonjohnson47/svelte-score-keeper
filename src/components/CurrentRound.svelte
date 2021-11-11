@@ -5,36 +5,44 @@
     import { getTotalScoreById } from '../utils';
     import type { Round } from '../types';
 
-    const currentRoundNumber = $scores.length;
+    let playerOperations = $players.reduce((acc, currPlayer) => {
+        return {...acc, ['player-' + currPlayer.id]: 'add'};
+    }, {});
 
-    const thisRoundScores: Round = $players.map((player) => ({
+    let playerPoints = $players.reduce((acc, currPlayer) => {
+        return {...acc, ['player-' + currPlayer.id]: null};
+    }, {});
+
+    let thisRoundScores: Round;
+    $: thisRoundScores = $players.map((player) => {
+
+        function calcPoints(operation: string, points: number) {
+            let operationValue = operation === 'add' ? 1 : -1;
+            return points * operationValue;
+        }
+
+        return {
             id: player.id,
-            points: 0
-    }));
-
-    /* why does this not work?
-
-    We should get this to work so we are finding the points by the 'id' property in the score object rather than index position of the score object within the thisRoundScores array
-
-    in html template below:
-    bind:value={getPlayerRoundById(thisRoundScores, player.id).points}
-
-    console.log(thisRoundScores);
-    function getPlayerRoundById(round: Round, playerId: number) {
-        // get object for the score for the player with the same id
-        console.log(round.find((score) => score.id === playerId));
-        return round.find((score) => score.id === playerId);
-    }
-    getPlayerRoundById(thisRoundScores, 1);
-    */
+            points: calcPoints(playerOperations['player-' + player.id], playerPoints['player-' + player.id])
+        };
+            
+    });
 
     function submitRound() {
-        scores.set([...$scores, thisRoundScores]);
-        roundToEdit.set(currentRoundNumber);
+
+        if ($roundToEdit === 1) {
+            // round 1
+            scores.set([thisRoundScores]);
+        } else {
+            // round 2+
+            scores.set([...$scores, thisRoundScores]);
+        }
+
+        roundToEdit.set($roundToEdit + 1);
     }
 </script>
 
-<h1>Round { currentRoundNumber }</h1>
+<h1>Round {$roundToEdit}</h1>
 <div>
     <a href="#history">View Scoring History</a>
     <a href="#game-setup">Start New Game</a>
@@ -44,7 +52,7 @@
         <h2>Score Card</h2>
 
         <ul>
-            {#each $players as player}
+            {#each $players as player (player.id)}
             <li>
                 <dl>
                     <dt>{player.name} <span class="sr-only">score</span></dt>
@@ -54,11 +62,23 @@
                     <fieldset>
                         <legend class="sr-only">Add or Subtract</legend>
                         <div>
-                            <input type="radio" id="add-{player.id}" name="add-{player.id}" value="add">
+                            <input
+                                type="radio"
+                                id="add-{player.id}"
+                                name={'player-' + player.id + 'operation'}
+                                bind:group={playerOperations['player-' + player.id]}
+                                value={'add'}
+                            >
                             <label for="add-{player.id}">Add</label>
                         </div>
                         <div>
-                            <input type="radio" id="subtract-{player.id}" name="subtract-{player.id}" value="subtract">
+                            <input
+                                type="radio"
+                                id="subtract-{player.id}"
+                                name={'player-' + player.id + 'operation'}
+                                bind:group={playerOperations['player-' + player.id]}
+                                value={'subtract'}
+                            >
                             <label for="subtract-{player.id}">Subtract</label>
                         </div>
                     </fieldset>
@@ -66,9 +86,10 @@
                         <label for="points-{player.id}">Points</label>
                         <input
                             type="number"
+                            min="0"
                             id="points-{player.id}"
                             name="points-{player.id}"
-                            bind:value={thisRoundScores[player.id].points}
+                            bind:value={playerPoints['player-' + player.id]}
                         >
                     </div>
                 </div>
