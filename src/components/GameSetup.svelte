@@ -3,17 +3,18 @@
     import { scores } from '../stores';
     import { afterUpdate } from 'svelte';
 
-    let thisInput;
+    let playerList: HTMLElement;
+    let highestPlayerId:number;
 
     function addPlayer() {
         players.set([...$players, { 
-            id: $players.length,
+            id: highestPlayerId + 1,
             name: ''
         }]);
         scores.set(
             $scores.map((scoreRound) => {
                 return [...scoreRound, {
-                    id: scoreRound.length,
+                    id: highestPlayerId + 1,
                     points: 0
                 }]
             })
@@ -36,24 +37,27 @@
     }
 
     afterUpdate(() => {
-        thisInput.focus();
+        const lastInput: HTMLInputElement = playerList.querySelector('li:last-child input');
+        lastInput.focus();
+        highestPlayerId = [...$players].sort((a, b) => b.id - a.id)[0].id;
     });
 
 </script>
 
 <h1>Who's Playing?</h1>
 
-<ul>
-    {#each $players as player}
+<ul bind:this={playerList}>
+    {#each $players as player, index (player.id)}
         <li>
             <label for="name-{player.id}">Player Name</label>
             <input
                 type="text"
                 id="name-{player.id}"
                 bind:value="{player.name}"
-                bind:this={thisInput}
             >
-            <button type="button" on:click={() => { deletePlayer(player.id)}}>Delete Player</button>
+            {#if $players.length !== index + 1}
+                <button type="button" on:click={() => { deletePlayer(player.id)}}>Delete Player</button>
+            {/if}
         </li>
     {/each}
 </ul>

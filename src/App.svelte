@@ -33,3 +33,9 @@
 	{/if}
 
 </main>
+
+<style>
+	main {
+		line-height: 1.5;
+	}
+</style>
