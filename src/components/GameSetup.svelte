@@ -1,26 +1,11 @@
 <script lang="ts">
     import { players } from '../stores';
     import { scores } from '../stores';
+    import { afterUpdate } from 'svelte';
+
+    let thisInput;
 
     function addPlayer() {
-
-        /* If we want to use 'update', would need to modify localStore like we have for 'set' such that it saves to localStorage, or we could create a custom store methods like addPlayer */
-
-        /*players.update((currPlayers) => {
-            return [...currPlayers, { 
-                id: currPlayers.length,
-                name: ''
-            }];
-        });
-        scores.update((currScores) => {
-            let newScores = currScores.map((scoreRound) => {
-                return [...scoreRound, { 
-                    id: scoreRound.length,
-                    points: 0
-                }];
-            });
-            return newScores;
-        });*/
         players.set([...$players, { 
             id: $players.length,
             name: ''
@@ -35,9 +20,24 @@
         );
     }
 
+    function deletePlayer(id: number) {
+        players.set(
+            $players.filter((player) => player.id !== id)
+        );
+        scores.set(
+            $scores.map((scoreRound) => {
+                return scoreRound.filter((score) => score.id !== id);
+            })
+        );
+    }
+
     function startGame() {
         document.location.hash = 'current-round';
     }
+
+    afterUpdate(() => {
+        thisInput.focus();
+    });
 
 </script>
 
@@ -51,7 +51,9 @@
                 type="text"
                 id="name-{player.id}"
                 bind:value="{player.name}"
+                bind:this={thisInput}
             >
+            <button type="button" on:click={() => { deletePlayer(player.id)}}>Delete Player</button>
         </li>
     {/each}
 </ul>
