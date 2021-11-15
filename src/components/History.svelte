@@ -6,8 +6,13 @@
     import { getAccumulativeScoreById } from '../utils';
 
     function editRound(index: number) {
-        roundToEdit.set(index);
+        roundToEdit.set(index + 1);
         document.location.hash = 'edit-round';
+    }
+
+    function goToCurrentRound() {
+        roundToEdit.set($scores.length + 1);
+        document.location.hash = 'current-round';
     }
 </script>
 
@@ -41,6 +46,6 @@
 {/each}
 
 <div>
-    <a href="#current-round">Back to Current Round</a>
+    <button type="button" on:click="{goToCurrentRound}">Back to Current Round</button>
     <a href="#game-setup">Start New Game</a>
 </div>

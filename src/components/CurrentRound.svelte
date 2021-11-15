@@ -38,6 +38,14 @@
             scores.set([...$scores, thisRoundScores]);
         }
 
+        for (const property in playerOperations) {
+            playerOperations[property] = 'add';
+        }
+
+        for (const property in playerPoints) {
+            playerPoints[property] = null;
+        }
+
         roundToEdit.set($roundToEdit + 1);
     }
 </script>
@@ -98,6 +106,6 @@
         </ul>
     </section>
     <div>
-        <button type="submit" on:click="{submitRound}">Submit Round</button>
+        <button type="button" on:click="{submitRound}">Submit Round</button>
     </div>
 </form>
