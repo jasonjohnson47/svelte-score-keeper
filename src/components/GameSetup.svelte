@@ -2,6 +2,7 @@
     import { players } from '../stores';
     import { scores } from '../stores';
     import { afterUpdate } from 'svelte';
+    import FloatingLabelInput from './FloatingLabelInput.svelte';
 
     let playerList: HTMLElement;
     let highestPlayerId:number;
@@ -44,28 +45,23 @@
 
 </script>
 
-<h1>Who's Playing?</h1>
-
-<ul bind:this={playerList}>
-    {#each $players as player, index (player.id)}
-        <li>
-            <label for="name-{player.id}">Player Name</label>
-            <input
-                type="text"
-                id="name-{player.id}"
-                bind:value="{player.name}"
-            >
-            {#if $players.length !== index + 1}
-                <button type="button" on:click={() => { deletePlayer(player.id)}}>Delete Player</button>
-            {/if}
-        </li>
-    {/each}
-</ul>
-
-<div>
+<main>
+    <h1>Who's Playing?</h1>
+    <ul class="list-unstyled" bind:this={playerList}>
+        {#each $players as player, index (player.id)}
+            <li>
+                <FloatingLabelInput
+                    id={'name-' + player.id}
+                    label={'Player Name'}
+                    type={'text'}
+                    bind:value={player.name}
+                />
+                {#if $players.length !== index + 1}
+                    <button type="button" on:click={() => { deletePlayer(player.id)}}>Delete Player</button>
+                {/if}
+            </li>
+        {/each}
+    </ul>
     <button type="button" on:click="{addPlayer}">Add Player</button>
-</div>
-
-<div>
     <button type="button" on:click="{startGame}">Start Game</button>
-</div>
+</main>
