@@ -3,6 +3,8 @@
     import { scores } from '../stores';
     import { afterUpdate } from 'svelte';
     import FloatingLabelInput from './FloatingLabelInput.svelte';
+	import { slide } from 'svelte/transition';
+    import { cubicInOut } from 'svelte/easing';
 
     let playerList: HTMLElement;
     let highestPlayerId:number;
@@ -38,8 +40,15 @@
     }
 
     afterUpdate(() => {
-        const lastInput: HTMLInputElement = playerList.querySelector('li:last-child input');
-        lastInput.focus();
+        const allInputs = Array.from(playerList.querySelectorAll('input'));
+        const firstEmptyInput: HTMLInputElement = allInputs.find((input) => {
+            return input.value === '';
+        });
+
+        if (document.activeElement.nodeName !== 'INPUT' && firstEmptyInput) {
+            firstEmptyInput.focus();
+        }
+
         highestPlayerId = [...$players].sort((a, b) => b.id - a.id)[0].id;
     });
 
@@ -47,9 +56,9 @@
 
 <main>
     <h1>Who's Playing?</h1>
-    <ul class="list-unstyled" bind:this={playerList}>
+    <ul class="list-unstyled player-list" bind:this={playerList}>
         {#each $players as player, index (player.id)}
-            <li>
+            <li transition:slide="{{duration: 500, easing: cubicInOut}}">
                 <FloatingLabelInput
                     id={'name-' + player.id}
                     label={'Player Name'}
@@ -57,11 +66,53 @@
                     bind:value={player.name}
                 />
                 {#if $players.length !== index + 1}
-                    <button type="button" on:click={() => { deletePlayer(player.id)}}>Delete Player</button>
+                    <button
+                        type="button"
+                        class="btn btn-delete"
+                        on:click={() => { deletePlayer(player.id)}}
+                    >
+                        <span class="sr-only">Delete Player</span>
+                        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><!-- Font Awesome Free 5.15.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"/></svg>
+                    </button>
                 {/if}
             </li>
         {/each}
     </ul>
-    <button type="button" on:click="{addPlayer}">Add Player</button>
-    <button type="button" on:click="{startGame}">Start Game</button>
+    <button type="button" class="btn btn-block btn-primary" on:click="{addPlayer}">Add Player</button>
+    <button type="button" class="btn btn-block btn-primary" on:click="{startGame}">Start Game</button>
 </main>
+
+<style>
+    .player-list li {
+        position: relative;
+    }
+    .player-list .btn-delete {
+        position: absolute;
+        top:0.3125rem;
+        right: 0.3125rem;
+    }
+    .btn-delete {
+        padding:.6875rem;
+        background-color:#24292e;
+        border-color: rgba(255,255,255,0.25);
+        color:#fff;
+        box-shadow: 0 4px 0 0 rgba(0,0,0,0.25);
+    }
+    .btn-delete:hover {
+        background-color: #494d51;
+        border-color: #fff;
+        color:#fff;
+    }
+    .btn-delete:focus {
+        background-color: #494d51;
+        border-color: #fff;
+        color:#fff;
+        box-shadow: 0 0 0 .1875rem rgba(255,255,255,0.3) !important;
+    }
+    .btn-delete svg {
+        fill: #fff;
+        display: block;
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+</style>
