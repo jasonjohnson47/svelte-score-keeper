@@ -6,6 +6,7 @@
     export let label: string = '';
     export let type: string = 'text';
     export let value: string = '';
+    export let min: string = '';
 
     let input: HTMLInputElement;
 
@@ -48,7 +49,7 @@
 <div class={containerClass}>
     <label for={id}>{label}</label>
     <input
-        {type} {id} {value}
+        {type} {id} {value} {min}
         bind:this={input}
         on:input={handleInput}
     >
