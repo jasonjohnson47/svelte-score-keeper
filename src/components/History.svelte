@@ -18,10 +18,29 @@
 
 <h1>Scoring History</h1>
 
+<div class="nav-buttons">
+    <button
+        type="button"
+        class="btn btn-secondary"
+        on:click="{goToCurrentRound}"
+    >Back to Current Round</button>
+    <a href="#game-setup" class="btn btn-secondary">Start New Game</a>
+</div>
+
 {#each $scores as round, index}
-<section>
-    <h2>Round {index + 1}</h2>
-    <button type="button" on:click="{() => { editRound(index) }}">Edit Round {index + 1}</button>
+<section class="container-fluid">
+    <div class="row round-heading">
+        <div class="col">
+            <h2>Round {index + 1}</h2>
+        </div>
+        <div class="col-auto">
+            <button
+                type="button"
+                class="btn btn-sm btn-primary"
+                on:click="{() => { editRound(index) }}"
+            >Edit <span class="sr-only">Round {index + 1}</span></button>
+        </div>
+    </div>
     <table>
         <thead>
             <tr>
@@ -45,7 +64,59 @@
 </section>
 {/each}
 
-<div>
-    <button type="button" on:click="{goToCurrentRound}">Back to Current Round</button>
-    <a href="#game-setup">Start New Game</a>
+<div class="nav-buttons">
+    <button
+        type="button"
+        class="btn btn-primary"
+        on:click="{goToCurrentRound}"
+    >Back to Current Round</button>
 </div>
+
+<style>
+    .round-heading {
+        padding: 0.5rem;
+    }
+    .round-heading h2 {
+        margin: 0;
+        color: #bacc4c;
+    }
+    table {
+        width:100%;
+        border-collapse: collapse;
+        margin-bottom: 1.5rem;
+    }
+    th,
+    td {
+        border-top:1px solid rgba(255,255,255,0.1);
+        padding: 0.75rem;
+        text-align: right;
+    }
+    th:first-child,
+    td:first-child {
+        text-align: left;
+    }
+    th {
+        background-color: #1f2428;
+        color: #fff;
+    }
+    th[scope="row"] {
+        background-color: transparent;
+        font-weight:400;
+        color: #d4d9de;
+    }
+
+    .nav-buttons {
+        margin-bottom: 1rem;
+    }
+    .nav-buttons .btn {
+        display: block;
+        width:100%;
+        margin-bottom: 0.5rem;
+    }
+    @media (min-width: 576px) {
+        .nav-buttons .btn {
+            display: inline-block;
+            width:auto;
+        }
+    }
+</style>

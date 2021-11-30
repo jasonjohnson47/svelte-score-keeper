@@ -7,6 +7,7 @@
     export let type: string = 'text';
     export let value: string = '';
     export let min: string = '';
+    export let ariaDescribedby: string = '';
 
     let input: HTMLInputElement;
 
@@ -49,7 +50,7 @@
 <div class={containerClass}>
     <label for={id}>{label}</label>
     <input
-        {type} {id} {value} {min}
+        {type} {id} {value} {min} aria-describedby="{ariaDescribedby}"
         bind:this={input}
         on:input={handleInput}
     >

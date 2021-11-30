@@ -52,64 +52,70 @@
 </script>
 
 <h1>Round {$roundToEdit}</h1>
-<div>
-    <a class="btn btn-primary" href="#history">View Scoring History</a>
-    <a class="btn btn-primary" href="#game-setup">Start New Game</a>
+
+
+<div class="nav-buttons">
+    <a class="btn btn-secondary" href="#history">View Scoring History</a>
+    <a class="btn btn-secondary" href="#game-setup">Start New Game</a>
 </div>
 <form action="">
-    <section>
+    <section class="score-card">
         <h2>Score Card</h2>
 
-        <ul>
+        <ul class="container-fluid">
             {#each $players as player (player.id)}
-            <li>
-                <dl>
-                    <dt>{player.name} <span class="sr-only">score</span></dt>
-                    <dd>{getTotalScoreById($scores, player.id)}</dd>
-                </dl>
-                <div role="group" aria-label="points this round">
-                    <fieldset class="add-sub-btn">
-                        <legend class="sr-only">Add or Subtract</legend>
-                        <div>
-                            <input
-                                type="radio"
-                                id="add-{player.id}"
-                                name={'player-' + player.id + 'operation'}
-                                bind:group={playerOperations['player-' + player.id]}
-                                value={'add'}
-                            >
-                            <label for="add-{player.id}" class="btn btn-primary"><span aria-label="add">-</span></label>
-                        </div>
-                        <div>
-                            <input
-                                type="radio"
-                                id="subtract-{player.id}"
-                                name={'player-' + player.id + 'operation'}
-                                bind:group={playerOperations['player-' + player.id]}
-                                value={'subtract'}
-                            >
-                            <label for="subtract-{player.id}" class="btn btn-primary"><span aria-label="subtract">+</span></label>
-                        </div>
-                    </fieldset>
-                    <div>
-                        <FloatingLabelInput
-                            id="points-{player.id}"
-                            label="Points"
-                            type={'number'}
-                            min="0"
-                            bind:value={playerPoints['player-' + player.id]}
-                        />
-                        <!--<label for="points-{player.id}">Points</label>
-                        <input
-                            type="number"
-                            min="0"
-                            id="points-{player.id}"
-                            name="points-{player.id}"
-                            bind:value={playerPoints['player-' + player.id]}
-                        >-->
+            <li class="row player-row">
+                <dl class="col">
+                    <div class="row justify-content-between h-100 align-content-center">
+                        <dt class="col">{player.name} <span class="sr-only">score</span></dt>
+                        <dd class="col-auto">{getTotalScoreById($scores, player.id)}</dd>
                     </div>
-                </div>
-            </li>
+                </dl>
+                <div class="col-auto" role="group" aria-label="points this round">
+                    <div class="row">
+                        <fieldset class="col-auto add-sub-btn">
+                            <legend class="sr-only">Add or Subtract</legend>
+                            <div>
+                                <input
+                                    type="radio"
+                                    id="add-{player.id}"
+                                    name={'player-' + player.id + 'operation'}
+                                    bind:group={playerOperations['player-' + player.id]}
+                                    value={'add'}
+                                >
+                                <label for="add-{player.id}" class="btn btn-primary"><span aria-label="currently adding, click to subtract">-</span></label>
+                            </div>
+                            <div>
+                                <input
+                                    type="radio"
+                                    id="subtract-{player.id}"
+                                    name={'player-' + player.id + 'operation'}
+                                    bind:group={playerOperations['player-' + player.id]}
+                                    value={'subtract'}
+                                >
+                                <label for="subtract-{player.id}" class="btn btn-primary"><span aria-label="currently subtracting, click to add">+</span></label>
+                            </div>
+                        </fieldset>
+                        <div class="col-auto">
+                            <FloatingLabelInput
+                                id="points-{player.id}"
+                                label="Points"
+                                type={'number'}
+                                min="0"
+                                bind:value={playerPoints['player-' + player.id]}
+                            />
+                            <!--<label for="points-{player.id}">Points</label>
+                            <input
+                                type="number"
+                                min="0"
+                                id="points-{player.id}"
+                                name="points-{player.id}"
+                                bind:value={playerPoints['player-' + player.id]}
+                            >-->
+                        </div><!-- ./col -->
+                    </div><!-- ./row -->
+                </div><!-- ./col -->
+            </li><!-- ./row -->
             {/each}
         </ul>
     </section>
@@ -118,6 +124,15 @@
     </div>
 </form>
 <style>
+    .player-row {
+        font-size: 1.25rem;
+        border-bottom: 1px solid rgba(255,255,255,0.2);
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+    .player-row dl {
+        margin: 0;
+    }
     .add-sub-btn {
         padding: 0;
         border: 0 none;
@@ -140,10 +155,15 @@
         clip: auto;
         white-space: nowrap;
         border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 1.8125rem / 50%;
     }
     .add-sub-btn label span {
         display: inline-block;
         min-width: 1.5rem;
+        font-size: 1.625rem;
+        line-height: 2.125rem;
+        margin-left:5px;
+        margin-right:5px;
     }
     .add-sub-btn :checked + label {
         /* sr-only */
@@ -162,5 +182,26 @@
         border-color: #fff;
         color: #212529;
         box-shadow: 0 0 0 0.1875rem rgba(186, 204, 76, 0.5) !important;
+    }
+
+    .nav-buttons {
+        margin-bottom: 1rem;
+    }
+    .nav-buttons .btn {
+        display: block;
+        width:100%;
+        margin-bottom: 0.5rem;
+    }
+    @media (min-width: 576px) {
+        .nav-buttons .btn {
+            display: inline-block;
+            width:auto;
+        }
+    }
+    
+
+    :global(.player-row .floating-label input) {
+        margin-bottom:0 !important;
+        width: 8.125rem !important;
     }
 </style>
