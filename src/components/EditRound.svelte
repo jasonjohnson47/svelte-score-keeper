@@ -5,6 +5,11 @@
     import { getPointsById } from '../utils';
     import type { Round } from '../types';
     import FloatingLabelInput from './FloatingLabelInput.svelte';
+    import AddSubtractToggle from './AddSubtractToggle.svelte';
+
+    let playerOperations = $players.reduce((acc, currPlayer) => {
+        return {...acc, ['player-' + currPlayer.id]: 'add'};
+    }, {});
 
     const currentRoundScores: Round = $scores[$roundToEdit - 1];
 
@@ -14,9 +19,15 @@
 
     let updatedRoundScores: Round;
     $: updatedRoundScores = $players.map((player) => {
+
+        function calcPoints(operation: string, points: number) {
+            let operationValue = operation === 'add' ? 1 : -1;
+            return points * operationValue;
+        }
+
         return {
             id: player.id,
-            points: updatedRoundPoints['player-' + player.id]
+            points: calcPoints(playerOperations['player-' + player.id], updatedRoundPoints['player-' + player.id])
         };
     });
 
@@ -36,6 +47,13 @@
             <li class="row player-row align-items-center">
                 <div class="col">{player.name}</div>
                 <div class="col-auto">
+                    <AddSubtractToggle 
+                        id="{player.id.toString()}"
+                        name={'player-' + player.id + '-operation'}
+                        bind:group={playerOperations['player-' + player.id]}
+                    />
+                </div>
+                <div class="col-auto">
                     <FloatingLabelInput
                         id="score-{player.id}"
                         label="Points"
@@ -44,14 +62,6 @@
                         ariaDescribedby="score-{player.id}-description"
                         bind:value={updatedRoundPoints['player-' + player.id]}
                     />
-                    <!--<label for="score-{player.id}">{player.name}</label>
-                    <input
-                        type="number"
-                        id="score-{player.id}"
-                        name="score-{player.id}"
-                        bind:value={updatedRoundPoints['player-' + player.id]}
-                        aria-describedby="score-{player.id}-description"
-                    >-->
                     <span id="score-{player.id}-description" class="sr-only">Points {player.name} earned in round {$roundToEdit}</span>
                 </div>
             </li>

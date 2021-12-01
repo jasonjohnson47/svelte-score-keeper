@@ -5,6 +5,7 @@
     import { getTotalScoreById } from '../utils';
     import type { Round } from '../types';
     import FloatingLabelInput from './FloatingLabelInput.svelte';
+    import AddSubtractToggle from './AddSubtractToggle.svelte';
 
     let playerOperations = $players.reduce((acc, currPlayer) => {
         return {...acc, ['player-' + currPlayer.id]: 'add'};
@@ -73,45 +74,23 @@
                 </dl>
                 <div class="col-auto" role="group" aria-label="points this round">
                     <div class="row">
-                        <fieldset class="col-auto add-sub-btn">
-                            <legend class="sr-only">Add or Subtract</legend>
-                            <div>
-                                <input
-                                    type="radio"
-                                    id="add-{player.id}"
-                                    name={'player-' + player.id + 'operation'}
-                                    bind:group={playerOperations['player-' + player.id]}
-                                    value={'add'}
-                                >
-                                <label for="add-{player.id}" class="btn btn-primary"><span aria-label="currently adding, click to subtract">-</span></label>
-                            </div>
-                            <div>
-                                <input
-                                    type="radio"
-                                    id="subtract-{player.id}"
-                                    name={'player-' + player.id + 'operation'}
-                                    bind:group={playerOperations['player-' + player.id]}
-                                    value={'subtract'}
-                                >
-                                <label for="subtract-{player.id}" class="btn btn-primary"><span aria-label="currently subtracting, click to add">+</span></label>
-                            </div>
-                        </fieldset>
+                        <div class="col-auto">
+                            <AddSubtractToggle 
+                                id="{player.id.toString()}"
+                                name={'player-' + player.id + '-operation'}
+                                bind:group={playerOperations['player-' + player.id]}
+                            />
+                        </div>
                         <div class="col-auto">
                             <FloatingLabelInput
                                 id="points-{player.id}"
                                 label="Points"
                                 type={'number'}
                                 min="0"
+                                ariaDescribedby="score-{player.id}-description"
                                 bind:value={playerPoints['player-' + player.id]}
                             />
-                            <!--<label for="points-{player.id}">Points</label>
-                            <input
-                                type="number"
-                                min="0"
-                                id="points-{player.id}"
-                                name="points-{player.id}"
-                                bind:value={playerPoints['player-' + player.id]}
-                            >-->
+                            <span id="score-{player.id}-description" class="sr-only">{player.name}'s points this round</span>
                         </div><!-- ./col -->
                     </div><!-- ./row -->
                 </div><!-- ./col -->
@@ -133,57 +112,6 @@
     .player-row dl {
         margin: 0;
     }
-    .add-sub-btn {
-        padding: 0;
-        border: 0 none;
-        margin: 0;
-    }
-    .add-sub-btn input {
-        position: absolute;
-        clip: rect(0, 0, 0, 0);
-        pointer-events: none;
-    }
-    .add-sub-btn label {
-        /* undo sr-only */
-        position: static;
-        width: auto;
-        min-width: 1.375rem;
-        height: auto;
-        padding: 0.6875rem;
-        margin: 0;
-        overflow: visible;
-        clip: auto;
-        white-space: nowrap;
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        border-radius: 1.8125rem / 50%;
-    }
-    .add-sub-btn label span {
-        display: inline-block;
-        min-width: 1.5rem;
-        font-size: 1.625rem;
-        line-height: 2.125rem;
-        margin-left:5px;
-        margin-right:5px;
-    }
-    .add-sub-btn :checked + label {
-        /* sr-only */
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-    }
-    .add-sub-btn:focus-within label {
-        background-color: #dce5a5;
-        border-color: #fff;
-        color: #212529;
-        box-shadow: 0 0 0 0.1875rem rgba(186, 204, 76, 0.5) !important;
-    }
-
     .nav-buttons {
         margin-bottom: 1rem;
     }
@@ -198,8 +126,6 @@
             width:auto;
         }
     }
-    
-
     :global(.player-row .floating-label input) {
         margin-bottom:0 !important;
         width: 8.125rem !important;
