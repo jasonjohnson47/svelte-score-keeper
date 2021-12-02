@@ -7,15 +7,26 @@
     import FloatingLabelInput from './FloatingLabelInput.svelte';
     import AddSubtractToggle from './AddSubtractToggle.svelte';
 
-    let playerOperations = $players.reduce((acc, currPlayer) => {
-        return {...acc, ['player-' + currPlayer.id]: 'add'};
-    }, {});
-
     const currentRoundScores: Round = $scores[$roundToEdit - 1];
+    /* [{id: 0, points: -10}, ...] */
 
     let updatedRoundPoints = $players.reduce((acc, currPlayer) => {
         return {...acc, ['player-' + currPlayer.id]: getPointsById(currentRoundScores, currPlayer.id)};
     }, {});
+    /* { "player-0": -10, "player-1": 20, "player-2": 5 } */
+
+    let updatedRoundPointsPositive = {};
+    for (const [key, value] of Object.entries(updatedRoundPoints)) {
+        updatedRoundPointsPositive[key] = Math.abs(value as number);
+    }
+
+    let playerOperations = $players.reduce((acc, currPlayer) => {
+        if (updatedRoundPoints['player-' + currPlayer.id] < 0) {
+            return {...acc, ['player-' + currPlayer.id]: 'subtract'};
+        }
+        return {...acc, ['player-' + currPlayer.id]: 'add'};
+    }, {});
+    /* { "player-0": "subtract", "player-1": "add", "player-2": "add" } */
 
     let updatedRoundScores: Round;
     $: updatedRoundScores = $players.map((player) => {
@@ -27,7 +38,7 @@
 
         return {
             id: player.id,
-            points: calcPoints(playerOperations['player-' + player.id], updatedRoundPoints['player-' + player.id])
+            points: calcPoints(playerOperations['player-' + player.id], updatedRoundPointsPositive['player-' + player.id])
         };
     });
 
@@ -60,7 +71,7 @@
                         type={'number'}
                         min="0"
                         ariaDescribedby="score-{player.id}-description"
-                        bind:value={updatedRoundPoints['player-' + player.id]}
+                        bind:value={updatedRoundPointsPositive['player-' + player.id]}
                     />
                     <span id="score-{player.id}-description" class="sr-only">Points {player.name} earned in round {$roundToEdit}</span>
                 </div>
