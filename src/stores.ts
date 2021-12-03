@@ -2,14 +2,14 @@ import { localStore } from "./localStore";
 import type { Player } from "./types";
 import type { ScoreHistory } from "./types";
 
-const initialPlayers: Player[] = [
+export const initialPlayers: Player[] = [
     {
         id: 0,
         name: "",
     },
 ];
 
-const initialScores: ScoreHistory = [
+export const initialScores: ScoreHistory = [
     [
         {
             id: 0,
@@ -18,7 +18,7 @@ const initialScores: ScoreHistory = [
     ],
 ];
 
-const initialRoundToEdit: number = 1;
+export const initialRoundToEdit: number = 1;
 
 export const players = localStore("score-keeper-players", initialPlayers);
 

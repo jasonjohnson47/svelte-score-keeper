@@ -1,9 +1,6 @@
 <script lang="ts">
-    import { players } from '../stores';
-	import { scores } from '../stores';
-    import { roundToEdit } from '../stores';
-    import { getPointsById } from '../utils';
-    import { getAccumulativeScoreById } from '../utils';
+    import { players, scores, roundToEdit } from '../stores';
+    import { getPointsById, getAccumulativeScoreById, startNewGame } from '../utils';
 
     function editRound(index: number) {
         roundToEdit.set(index + 1);
@@ -24,7 +21,11 @@
         class="btn btn-secondary"
         on:click="{goToCurrentRound}"
     >Back to Current Round</button>
-    <a href="#game-setup" class="btn btn-secondary">Start New Game</a>
+    <button
+        type="button"
+        class="btn btn-secondary"
+        on:click="{startNewGame}"
+    >Start New Game</button>
 </div>
 
 {#each $scores as round, index}

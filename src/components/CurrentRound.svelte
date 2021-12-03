@@ -1,8 +1,6 @@
 <script lang="ts">
-    import { players } from '../stores';
-	import { scores } from '../stores';
-    import { roundToEdit } from '../stores';
-    import { getTotalScoreById } from '../utils';
+    import { players, scores, roundToEdit } from '../stores';
+    import { startNewGame, getTotalScoreById } from '../utils';
     import type { Round } from '../types';
     import FloatingLabelInput from './FloatingLabelInput.svelte';
     import AddSubtractToggle from './AddSubtractToggle.svelte';
@@ -66,7 +64,11 @@
 
 <div class="nav-buttons">
     <a class="btn btn-secondary" href="#history">View Scoring History</a>
-    <a class="btn btn-secondary" href="#game-setup">Start New Game</a>
+    <button
+        type="button"
+        class="btn btn-secondary"
+        on:click="{startNewGame}"
+    >Start New Game</button>
 </div>
 <form action="">
     <section class="score-card">

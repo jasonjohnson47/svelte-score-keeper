@@ -1,5 +1,6 @@
 import type { Round } from "./types";
 import type { ScoreHistory } from "./types";
+import { players, scores, roundToEdit, initialPlayers, initialScores, initialRoundToEdit } from './stores';
 
 export function getPointsById(round: Round, playerId: number) {
     return round.filter(({ id }) => id === playerId)[0].points;
@@ -33,4 +34,11 @@ export function getAccumulativeScoreById(
     },
     0);
     return totalScore;
+}
+
+export function startNewGame() {
+    players.set(initialPlayers);
+    scores.set(initialScores);
+    roundToEdit.set(initialRoundToEdit);
+    document.location.hash = 'game-setup'
 }
