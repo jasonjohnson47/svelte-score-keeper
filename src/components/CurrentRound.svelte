@@ -33,6 +33,14 @@
 
     function submitRound() {
 
+        const isClean = Object.values(playerPoints).every((value) => value === null);
+        
+        if (isClean) {
+            // use modal or alert here
+            console.log('Please enter at least one player\'s points');
+            return;
+        }
+
         if ($roundToEdit === 1) {
             // round 1
             scores.set([thisRoundScores]);
