@@ -17,12 +17,6 @@
 
     let input: HTMLInputElement;
 
-    afterUpdate(() => {
-        if (hasError) {
-            ariaDescribedby = 'error-message-' + id;
-        }
-    });
-
     $: containerClasses = ['floating-label'];
     $: containerClass = containerClasses.join(' ');
 
@@ -51,6 +45,19 @@
 
 	});
 
+    afterUpdate(() => {
+        if (hasError) {
+            ariaDescribedby = 'error-message-' + id;
+            if (!containerClasses.includes('has-error')) {
+                containerClasses = [...containerClasses, 'has-error'];
+            }
+        } else {
+            containerClasses = containerClasses.filter((containerClass) => {
+                return containerClass !== 'has-error';
+            });
+        }
+    });
+
     const handleInput = (e) => {
         // in here, you can switch on type and implement whatever behavior you need
         value = type.match(/^(number|range)$/)
@@ -62,7 +69,8 @@
 <div class={containerClass}>
     <label for={id}>{label}</label>
     <input
-        {type} {id} {value} {min} {required}
+        {type} {id} {value} {min}
+        aria-required={required}
         aria-describedby="{ariaDescribedby}"
         data-errorMsg={errorMsg}
         data-error={hasError}
@@ -70,7 +78,7 @@
         on:input={handleInput}
     >
     {#if hasError}
-        <span id="error-message-{id}">{errorMsg}</span>
+        <span id="error-message-{id}" class="error-message">{errorMsg}</span>
     {/if}
 </div>
 
@@ -93,6 +101,16 @@
     .floating-label.has-focus input {
         border-color: #94999e;
         outline: 0 none;
+    }
+    .floating-label.has-error input {
+        border-color: #f97583;
+    }
+    .error-message {
+        font-size:0.875rem;
+        color: #f97583;
+        margin-left:1rem;
+        position:relative;
+        top:-0.75em;
     }
     .floating-label label {
         position: absolute;

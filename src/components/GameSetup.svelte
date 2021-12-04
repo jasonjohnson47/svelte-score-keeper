@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { players } from '../stores';
-    import { scores } from '../stores';
+    import { players, scores } from '../stores';
     import { afterUpdate } from 'svelte';
     import FloatingLabelInput from './FloatingLabelInput.svelte';
 	import { slide } from 'svelte/transition';
@@ -8,7 +7,6 @@
 
     let playerList: HTMLElement;
     let highestPlayerId:number;
-
     let nameFields = {};
 
     function addPlayer() {
@@ -38,6 +36,17 @@
     }
 
     function startGame() {
+
+        let playerWithNoName = $players.find((player) => {
+            return player.name === '';
+        });
+
+        if (playerWithNoName && nameFields['name-' + playerWithNoName.id]) {
+            nameFields['name-' + playerWithNoName.id].hasError = true;
+            nameFields['name-' + playerWithNoName.id].errorMsg = 'Player name is required';
+            return false;
+        }
+
         document.location.hash = 'current-round';
     }
 
@@ -53,13 +62,11 @@
 
         highestPlayerId = [...$players].sort((a, b) => b.id - a.id)[0].id;
 
-        let playerWithNoName = $players.find((player) => {
-            return player.name === '';
-        });
-        if (nameFields['name-' + playerWithNoName.id]) {
-            console.log(nameFields['name-' + playerWithNoName.id]);
-            nameFields['name-' + playerWithNoName.id].hasError = true;
-            nameFields['name-' + playerWithNoName.id].errorMsg = 'Player name is required';
+        for (const field in nameFields) {
+            if (nameFields[field] && nameFields[field].value !== '') {
+                nameFields[field].hasError = null;
+                nameFields[field].errorMsg = null;
+            }
         }
     });
 
@@ -77,7 +84,7 @@
                     required={true}
                     hasError={null}
                     errorMsg={null}
-                    bind:this={nameFields['name-' + index]}
+                    bind:this={nameFields['name-' + player.id]}
                     bind:value={player.name}
                 />
                 {#if $players.length !== index + 1}
