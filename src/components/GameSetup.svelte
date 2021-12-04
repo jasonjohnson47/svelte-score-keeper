@@ -9,6 +9,8 @@
     let playerList: HTMLElement;
     let highestPlayerId:number;
 
+    let nameFields = {};
+
     function addPlayer() {
         players.set([...$players, { 
             id: highestPlayerId + 1,
@@ -50,6 +52,15 @@
         }
 
         highestPlayerId = [...$players].sort((a, b) => b.id - a.id)[0].id;
+
+        let playerWithNoName = $players.find((player) => {
+            return player.name === '';
+        });
+        if (nameFields['name-' + playerWithNoName.id]) {
+            console.log(nameFields['name-' + playerWithNoName.id]);
+            nameFields['name-' + playerWithNoName.id].hasError = true;
+            nameFields['name-' + playerWithNoName.id].errorMsg = 'Player name is required';
+        }
     });
 
 </script>
@@ -63,6 +74,10 @@
                     id={'name-' + player.id}
                     label={'Player Name'}
                     type={'text'}
+                    required={true}
+                    hasError={null}
+                    errorMsg={null}
+                    bind:this={nameFields['name-' + index]}
                     bind:value={player.name}
                 />
                 {#if $players.length !== index + 1}

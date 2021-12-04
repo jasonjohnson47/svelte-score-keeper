@@ -1,15 +1,27 @@
+<svelte:options accessors={true}/>
+
 <script lang="ts">
 
     import { onMount } from 'svelte';
+    import { afterUpdate } from 'svelte';
     
     export let id: string = '';
     export let label: string = '';
     export let type: string = 'text';
     export let value: string = '';
-    export let min: string = '';
-    export let ariaDescribedby: string = '';
+    export let min = null;
+    export let ariaDescribedby = null;
+    export let required = null;
+    export let hasError = null;
+    export let errorMsg = null;
 
     let input: HTMLInputElement;
+
+    afterUpdate(() => {
+        if (hasError) {
+            ariaDescribedby = 'error-message-' + id;
+        }
+    });
 
     $: containerClasses = ['floating-label'];
     $: containerClass = containerClasses.join(' ');
@@ -50,10 +62,16 @@
 <div class={containerClass}>
     <label for={id}>{label}</label>
     <input
-        {type} {id} {value} {min} aria-describedby="{ariaDescribedby}"
+        {type} {id} {value} {min} {required}
+        aria-describedby="{ariaDescribedby}"
+        data-errorMsg={errorMsg}
+        data-error={hasError}
         bind:this={input}
         on:input={handleInput}
     >
+    {#if hasError}
+        <span id="error-message-{id}">{errorMsg}</span>
+    {/if}
 </div>
 
 <style>
