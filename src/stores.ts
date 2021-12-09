@@ -1,6 +1,5 @@
 import { localStore } from "./localStore";
-import type { Player } from "./types";
-import type { ScoreHistory } from "./types";
+import type { Player, ScoreHistory } from "./types";
 
 export const initialPlayers: Player[] = [
     {

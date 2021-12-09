@@ -1,6 +1,6 @@
 <script lang="ts">
     import { players, scores, roundToEdit } from '../stores';
-    import { getPointsById, getAccumulativeScoreById, startNewGame } from '../utils';
+    import { getPointsById, getAccumulativeScoreById } from '../utils';
 
     function editRound(index: number) {
         roundToEdit.set(index + 1);
@@ -21,11 +21,7 @@
         class="btn btn-secondary"
         on:click="{goToCurrentRound}"
     >Back to Current Round</button>
-    <button
-        type="button"
-        class="btn btn-secondary"
-        on:click="{startNewGame}"
-    >Start New Game</button>
+    <a class="btn btn-secondary" href="#game-setup">Manage Players</a>
 </div>
 
 {#each $scores as round, index}
@@ -79,7 +75,6 @@
     }
     .round-heading h2 {
         margin: 0;
-        color: #bacc4c;
     }
     table {
         width:100%;

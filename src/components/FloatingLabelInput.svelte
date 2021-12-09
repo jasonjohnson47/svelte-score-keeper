@@ -2,8 +2,7 @@
 
 <script lang="ts">
 
-    import { onMount } from 'svelte';
-    import { afterUpdate } from 'svelte';
+    import { onMount, afterUpdate } from 'svelte';
     
     export let id: string = '';
     export let label: string = '';

@@ -16,7 +16,7 @@
             {name}
             bind:group={group}
         >
-        <label for="add-{id}" class="btn btn-primary"><span aria-label="currently adding, click to subtract">-</span></label>
+        <label for="add-{id}" class="btn btn-primary" aria-label="currently adding, click to subtract"><span>-</span></label>
     </div>
     <div>
         <input
@@ -26,7 +26,7 @@
             {name}
             bind:group={group}
         >
-        <label for="subtract-{id}" class="btn btn-primary"><span aria-label="currently subtracting, click to add">+</span></label>
+        <label for="subtract-{id}" class="btn btn-primary" aria-label="currently subtracting, click to add"><span>+</span></label>
     </div>
 </fieldset>
 

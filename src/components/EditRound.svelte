@@ -1,7 +1,5 @@
 <script lang="ts">
-    import { players } from '../stores';
-	import { scores } from '../stores';
-    import { roundToEdit } from '../stores';
+    import { players, scores, roundToEdit } from '../stores';
     import { getPointsById } from '../utils';
     import type { Round } from '../types';
     import FloatingLabelInput from './FloatingLabelInput.svelte';
@@ -57,7 +55,7 @@
         {#each $players as player}
             <li class="row player-row align-items-center">
                 <div class="col">{player.name}</div>
-                <div class="col-auto">
+                <div class="col-auto pr-0">
                     <AddSubtractToggle 
                         id="{player.id.toString()}"
                         name={'player-' + player.id + '-operation'}

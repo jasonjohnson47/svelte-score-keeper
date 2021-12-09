@@ -13,13 +13,6 @@
 
 <main>
 
-	<!--<nav>
-		<a href="#game-setup">Game Setup</a> |
-		<a href="#current-round">Current Round</a> |
-		<a href="#history">History</a> |
-		<a href="#edit-round">Edit Round</a>
-	</nav>-->
-
 	{#if page==="#game-setup"}
 		<GameSetup />
 	{:else if page === "#current-round"}
@@ -33,9 +26,3 @@
 	{/if}
 
 </main>
-
-<style>
-	main {
-		line-height: 1.5;
-	}
-</style>
