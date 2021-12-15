@@ -44,29 +44,31 @@
             nameFields['name-' + playerWithNoName.id].hasError = true;
             nameFields['name-' + playerWithNoName.id].errorMsg = 'Player name is required';
             return false;
+        } else {
+            return true;
         }
     }
 
     function startGame() {
-        validateForm();
+        if (validateForm()) {
+            roundToEdit.set(initialRoundToEdit);
 
-        roundToEdit.set(initialRoundToEdit);
+            const resetScores = $players.map((player) => {
+                return {
+                    id: player.id,
+                    points: 0,
+                }
+            });
 
-        const resetScores = $players.map((player) => {
-            return {
-                id: player.id,
-                points: 0,
-            }
-        });
-
-        scores.set([resetScores]);
-
-        document.location.hash = 'current-round';
+            scores.set([resetScores]);
+            document.location.hash = 'current-round';
+        }
     }
 
     function continueGame() {
-        validateForm();
-        document.location.hash = 'current-round';
+        if (validateForm()) {
+            document.location.hash = 'current-round';
+        }
     }
 
     afterUpdate(() => {
@@ -105,7 +107,7 @@
                 bind:this={nameFields['name-' + player.id]}
                 bind:value={player.name}
             />
-            {#if $players.length !== index + 1}
+            {#if $players.length > 1 || index > 0}
                 <button
                     type="button"
                     class="btn btn-delete"

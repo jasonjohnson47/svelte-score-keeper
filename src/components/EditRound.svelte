@@ -86,7 +86,7 @@
             type="button"
             class="btn btn-primary"
             on:click="{updateRound}"
-        >Update Round</button>
+        >Update</button>
     </div>
 </div>
 
