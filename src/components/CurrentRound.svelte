@@ -1,10 +1,11 @@
 <script lang="ts">
     import { players, scores, roundToEdit } from '../stores';
-    import { getTotalScoreById } from '../utils';
+    import { getTotalScoreById, getAccumulativeScoreById } from '../utils';
     import type { Round } from '../types';
     import FloatingLabelInput from './FloatingLabelInput.svelte';
     import AddSubtractToggle from './AddSubtractToggle.svelte';
     import { fly } from 'svelte/transition';
+    import { animateNumber } from '../animateNumber';
 
     let playerOperations = $players.reduce((acc, currPlayer) => {
         return {...acc, ['player-' + currPlayer.id]: 'add'};
@@ -79,7 +80,18 @@
                 <div class="row justify-content-between h-100 align-content-center">
                     <dt class="col">{player.name} <span class="sr-only">score</span></dt>
                     {#key getTotalScoreById($scores, player.id)}
-                    <dd class="col-auto" in:fly={{ y: -20 }}>{getTotalScoreById($scores, player.id)}</dd>
+                    <!--<dd class="col-auto" in:fly={{ y: -20 }}>{getTotalScoreById($scores, player.id)}</dd>-->
+                    <dd
+                        class="col-auto"
+                        in:animateNumber={
+                            {
+                                startValue: getAccumulativeScoreById($scores, player.id, $roundToEdit - 3),
+                                endValue: (getTotalScoreById($scores, player.id))
+                            }
+                        }
+                    >
+                        {getTotalScoreById($scores, player.id)}
+                    </dd>
                     {/key}
                 </div>
             </dl>
