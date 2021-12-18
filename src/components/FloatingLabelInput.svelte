@@ -21,7 +21,9 @@
 
     onMount(() => {
 
-        if (value !== '') {
+        console.log(value);
+
+        if (value != null) {
             containerClasses = ['floating-label', 'is-floating'];
         }
 
