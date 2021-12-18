@@ -4,7 +4,6 @@
     import type { Round } from '../types';
     import FloatingLabelInput from './FloatingLabelInput.svelte';
     import AddSubtractToggle from './AddSubtractToggle.svelte';
-    import { fly } from 'svelte/transition';
     import { animateNumber } from '../animateNumber';
 
     let playerOperations = $players.reduce((acc, currPlayer) => {
@@ -80,7 +79,6 @@
                 <div class="row justify-content-between h-100 align-content-center">
                     <dt class="col">{player.name} <span class="sr-only">score</span></dt>
                     {#key getTotalScoreById($scores, player.id)}
-                    <!--<dd class="col-auto" in:fly={{ y: -20 }}>{getTotalScoreById($scores, player.id)}</dd>-->
                     <dd
                         class="col-auto"
                         in:animateNumber={

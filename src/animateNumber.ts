@@ -1,3 +1,5 @@
+import { quadOut } from 'svelte/easing';
+
 interface ElemTextObjType {
     leadingChars: string;
     endingChars: string;
@@ -46,6 +48,12 @@ export function animateNumber(elem: HTMLElement, { startValue, endValue }) {
 
     return {
         duration,
+        css: (t: number) => {
+            const eased = quadOut(t);
+            return `transform: scale(${Math.abs((eased * 2) - 3)}) translateY(-${Math.abs((eased * 10) - 10)}px);
+            opacity: ${eased * 1};`;
+
+        },
         tick: (t: number) => {
             const newValue = startValue + Math.trunc((endValue - startValue) * t);
             updateTextContent(elem, newValue, elemTextObj);
