@@ -58,6 +58,7 @@
             {/each}
         </tbody>
     </table>
+    <hr />
 </section>
 {/each}
 

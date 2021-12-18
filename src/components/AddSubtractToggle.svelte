@@ -16,7 +16,7 @@
             {name}
             bind:group={group}
         >
-        <label for="add-{id}" class="btn btn-primary" aria-label="currently adding, click to subtract"><span>-</span></label>
+        <label for="add-{id}" class="btn btn-secondary" aria-label="currently adding, click to subtract"><span>-</span></label>
     </div>
     <div>
         <input
@@ -26,7 +26,7 @@
             {name}
             bind:group={group}
         >
-        <label for="subtract-{id}" class="btn btn-primary" aria-label="currently subtracting, click to add"><span>+</span></label>
+        <label for="subtract-{id}" class="btn btn-secondary" aria-label="currently subtracting, click to add"><span>+</span></label>
     </div>
 </fieldset>
 
@@ -76,9 +76,9 @@
         border: 0;
     }
     .add-sub-btn:focus-within label {
-        background-color: #dce5a5;
+        background-color: #d4d9de;
         border-color: #fff;
         color: #212529;
-        box-shadow: 0 0 0 0.1875rem rgba(186, 204, 76, 0.5) !important;
+        box-shadow: 0 0 0 0.1875rem rgba(255, 255, 255, 0.33) !important;
     }
 </style>
