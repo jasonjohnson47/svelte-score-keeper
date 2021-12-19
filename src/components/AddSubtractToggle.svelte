@@ -52,7 +52,7 @@
         overflow: visible;
         clip: auto;
         white-space: nowrap;
-        border: 1px solid rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 1.8125rem / 50%;
     }
     .add-sub-btn label span {

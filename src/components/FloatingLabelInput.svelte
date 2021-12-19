@@ -100,7 +100,8 @@
         box-shadow: inset 0 4px 0 0 rgba(0,0,0,0.25);
     }
     .floating-label.has-focus input {
-        border-color: #94999e;
+        /*border-color: #94999e;*/
+        border-color: #bacc4c;
         outline: 0 none;
     }
     .floating-label.has-error input {
