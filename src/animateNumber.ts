@@ -17,7 +17,7 @@ function updateTextContent(
     };
     elem.textContent =
         elemTextObj.leadingChars +
-        Number(value).toLocaleString(undefined, localeStringOptions) +
+        Math.abs(Number(value)).toLocaleString(undefined, localeStringOptions) +
         elemTextObj.endingChars;
 }
 
@@ -35,12 +35,8 @@ export function animateNumber(elem: HTMLElement, { startValue, endValue }) {
     const isDecimalNumber = numberString.indexOf(".") !== -1 ? true : false;
 
     const elemTextObj = {
-        leadingChars: (elem.textContent.match(
-            /^[^0-9.]*/g
-        ) as RegExpExecArray).join(""),
-        endingChars: (elem.textContent.match(/[^0-9]*$/g) as RegExpExecArray).join(
-            ""
-        ),
+        leadingChars: (elem.textContent.match(/^[^0-9.]*/g) as RegExpExecArray).join(""),
+        endingChars: (elem.textContent.match(/[^0-9]*$/g) as RegExpExecArray).join(""),
         decimalPlaces: isDecimalNumber
             ? numberString.length - 1 - numberString.lastIndexOf(".")
             : 0
