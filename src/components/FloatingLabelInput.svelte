@@ -21,8 +21,6 @@
 
     onMount(() => {
 
-        console.log(value);
-
         if (value != null) {
             containerClasses = ['floating-label', 'is-floating'];
         }
@@ -79,7 +77,7 @@
         on:input={handleInput}
     >
     {#if hasError}
-        <span id="error-message-{id}" class="error-message">{errorMsg}</span>
+        <span id="error-message-{id}" class="error-message" role="alert">{errorMsg}</span>
     {/if}
 </div>
 
@@ -109,7 +107,7 @@
     }
     .error-message {
         font-size:0.875rem;
-        color: #f97583;
+        font-weight: 400;
         margin-left:1rem;
         position:relative;
         top:-0.75em;

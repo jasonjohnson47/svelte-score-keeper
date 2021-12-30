@@ -1,10 +1,13 @@
 <script lang="ts">
+    import { afterUpdate } from 'svelte';
     import { players, scores, roundToEdit } from '../stores';
     import { getTotalScoreById, getAccumulativeScoreById } from '../utils';
     import type { Round } from '../types';
     import FloatingLabelInput from './FloatingLabelInput.svelte';
     import AddSubtractToggle from './AddSubtractToggle.svelte';
     import { animateNumber } from '../animateNumber';
+
+    let playerList: HTMLElement;
 
     let playerOperations = $players.reduce((acc, currPlayer) => {
         return {...acc, ['player-' + currPlayer.id]: 'add'};
@@ -29,13 +32,26 @@
             
     });
 
+    interface PointsFieldsType {
+        [fieldId: string]: FloatingLabelInput
+    }
+
+    let pointsFields: PointsFieldsType = {};
+    let hasError = false;
+
     function submitRound() {
 
         const isClean = Object.values(playerPoints).every((value) => value === null);
         
         if (isClean) {
-            // use modal or alert here
-            alert('Please enter at least one player\'s points');
+            hasError = true;
+            const firstEmptyPointsField: FloatingLabelInput = Object.values(pointsFields)[0];
+
+            if (firstEmptyPointsField) {
+                firstEmptyPointsField.hasError = true;
+                firstEmptyPointsField.errorMsg = 'Please enter points';
+            }
+
             return;
         }
 
@@ -56,10 +72,29 @@
         }
 
         roundToEdit.set($roundToEdit + 1);
+
+        // reset any errors
+        hasError = false;
+        for (const field in pointsFields) {
+            pointsFields[field].hasError = null;
+            pointsFields[field].errorMsg = null;
+        }
+
     }
+
+    afterUpdate(() => {
+        const allInputs = Array.from(playerList.querySelectorAll('input'));
+        const firstEmptyInput: HTMLInputElement = allInputs.find((input) => {
+            return input.value === '';
+        });
+
+        if (document.activeElement.nodeName !== 'INPUT' && firstEmptyInput) {
+            firstEmptyInput.focus();
+        }
+    });
 </script>
 
-<h1>Round {$roundToEdit}</h1>
+<h1 aria-live="polite" aria-atomic="true">Round {$roundToEdit}</h1>
 
 
 <div class="nav-buttons">
@@ -72,7 +107,11 @@
 <section class="score-card">
     <h2>Score Card</h2>
 
-    <ul class="container-fluid">
+    {#if hasError}
+        <p class="error-message" role="alert">Please enter at least one player's points</p>
+    {/if}
+
+    <ul class="container-fluid" bind:this={playerList}>
         {#each $players as player (player.id)}
         <li class="row player-row">
             <dl class="col">
@@ -108,7 +147,10 @@
                             label="Points"
                             type={'number'}
                             min="0"
+                            hasError={null}
+                            errorMsg={null}
                             ariaDescribedby="score-{player.id}-description"
+                            bind:this={pointsFields['points-' + player.id]}
                             bind:value={playerPoints['player-' + player.id]}
                         />
                         <span id="score-{player.id}-description" class="sr-only">{player.name}'s points this round</span>
@@ -150,5 +192,11 @@
     :global(.player-row .floating-label input) {
         margin-bottom:0 !important;
         width: 8.125rem !important;
+    }
+    :global(.error-message) {
+        display: block;
+        margin-left: 0.5rem !important;
+        position: static !important;
+        top: 0 !important;
     }
 </style>

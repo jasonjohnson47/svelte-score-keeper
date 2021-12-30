@@ -139,3 +139,8 @@ hr {
     color: #212529;
     box-shadow: 0 0 0 0.1875rem rgba(255, 255, 255, 0.33) !important;
 }
+
+.error-message {
+    font-weight: 800;
+    color: #f97583;
+}
